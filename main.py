@@ -1,24 +1,26 @@
 #!/usr/bin/env python3
-"""Entry program for the news-image-20261122 bounty.
+"""news-image-20261122 entry program (v2).
 
-The judged image is the entry.png stored beside this file in the repository;
-the program's only job is to copy it to /output/entry.png (or to the directory
-named by MAKEFUN_OUTPUT_DIR when run outside the grader). Python 3 standard
-library only, no network, deterministic.
+The poster judged by make.fun is the entry.png committed next to this
+file. Running the program simply copies that image into the grader's
+output folder (/output by default, or $MAKEFUN_OUTPUT_DIR). It uses
+nothing beyond the Python standard library, touches no network, and
+produces the same bytes on every run.
 """
 
 import os
 import shutil
-from pathlib import Path
+import sys
 
 
-def main():
-    here = Path(__file__).resolve().parent
-    source = here / "entry.png"
-    out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-    out_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copyfile(source, out_dir / "entry.png")
+def main() -> int:
+    base = os.path.dirname(os.path.abspath(__file__))
+    image = os.path.join(base, "entry.png")
+    target_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
+    os.makedirs(target_dir, exist_ok=True)
+    shutil.copyfile(image, os.path.join(target_dir, "entry.png"))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
